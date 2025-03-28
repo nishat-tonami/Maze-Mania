@@ -10,10 +10,15 @@ public class App {
 
         JFrame frame=new JFrame("Maze Mania!");
 
-        frame.setVisible(true);
+        //frame.setVisible(true);
         frame.setSize(boardWidth,boardHeight);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        MazeMania maze = new MazeMania();
+        frame.add(maze);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
