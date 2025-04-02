@@ -44,6 +44,8 @@ public class MazeMania extends JPanel {
        private Image pacmanLeft;
        private Image pacmanRight;
 
+       private Image foodImage;
+
      //X=wall,O=skip,P=pacman,' '=food
     //Ghosts : c=cyan,o=orange,p=pink,r=red
     private String[] tileMap = {
@@ -91,6 +93,8 @@ public class MazeMania extends JPanel {
         pacmanLeft=new ImageIcon(getClass().getResource("./pacman left.png")).getImage();
         pacmanRight=new ImageIcon(getClass().getResource("./pacman right.png")).getImage();
 
+        foodImage=new ImageIcon(getClass().getResource("./orange.png")).getImage();
+
         loadMap();
        }
 
@@ -131,7 +135,7 @@ public class MazeMania extends JPanel {
                                    pacman=new Block(pacmanRight,x,y,tileSize,tileSize);
                             }
                             else if(tileMapChar==' ') {
-                                   Block food=new Block(null,x+14,y+14,4,4);
+                                   Block food=new Block(foodImage,x+8,y+8,16,16);
                                    foods.add(food);
                             }
                      }
@@ -150,9 +154,8 @@ public class MazeMania extends JPanel {
               for(Block wall:walls) {
                      g.drawImage(wall.image,wall.x,wall.y,wall.width,wall.height,null);
               }
-              g.setColor(Color.white);
               for(Block food:foods) {
-                     g.fillRect(food.x,food.y,food.width,food.height);
+                     g.drawImage(food.image,food.x,food.y,food.width,food.height,null);
               }
        }
 }
