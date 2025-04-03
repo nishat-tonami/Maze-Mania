@@ -14,6 +14,9 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
               int startX;
               int startY;
+              char d='U';
+              int velX=0;
+              int velY=0;
               
               Block(Image image,int x,int y,int width,int height) {
                      this.image=image;
@@ -23,6 +26,29 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      this.height=height;
                      this.startX=x;
                      this.startY=y;
+              }
+              void updateDirection(char d) {
+                     this.d=d;
+                     updateVel();
+              }
+              void updateVel() {
+                     if(this.d=='U') {
+                            this.velX=0;
+                            this.velY=-tileSize/4;
+                     }
+                     else if(this.d=='D') {
+                            this.velX=0;
+                            this.velY=tileSize/4;
+                     }
+                     else if(this.d=='L') {
+                            this.velX=-tileSize/4;
+                            this.velY=0;
+                     }
+                     else if(this.d=='R') {
+                            this.velX=tileSize/4;
+                            this.velY=0;
+                     }
+
               }
        }
 
@@ -47,7 +73,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        private Image foodImage;
 
      //X=wall,O=skip,P=pacman,' '=food
-    //Ghosts : c=cyan,o=orange,p=pink,r=red
+    //Ghosts:c=cyan,o=orange,p=pink,r=red
     private String[] tileMap = {
        "XXXXXXXXXXXXXXXXXXX",
        "X        X        X",
@@ -166,8 +192,14 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               }
        }
 
+       public void move() {
+              pacman.x+=pacman.velX;
+              pacman.y+=pacman.velY;
+       }      
+
        @Override
        public void actionPerformed(ActionEvent e) {
+              move();
               repaint();
        }
 
@@ -181,6 +213,17 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        @Override
        public void keyReleased(KeyEvent e) {
-          
+       if(e.getKeyCode()==KeyEvent.VK_UP) {
+          pacman.updateDirection('U');
+       }
+       else if(e.getKeyCode()==KeyEvent.VK_DOWN) {
+          pacman.updateDirection('D');
+       }
+       else if(e.getKeyCode()==KeyEvent.VK_LEFT) {
+          pacman.updateDirection('L');
+       }
+       else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
+          pacman.updateDirection('R');
+       }
        }
 }
