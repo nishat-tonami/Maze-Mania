@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 
-public class MazeMania extends JPanel {
+public class MazeMania extends JPanel implements ActionListener,KeyListener{
        class Block {
               int x;
               int y;
@@ -77,9 +77,13 @@ public class MazeMania extends JPanel {
        HashSet<Block> ghosts;
        Block pacman;
 
+       Timer gameLoop;
+
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
         setBackground(Color.darkGray);
+        addKeyListener(this);
+        setFocusable(true);
 
         wallImage=new ImageIcon(getClass().getResource("./wall.png")).getImage();
         cyanGhost=new ImageIcon(getClass().getResource("./cyan ghost.png")).getImage();
@@ -96,6 +100,9 @@ public class MazeMania extends JPanel {
         foodImage=new ImageIcon(getClass().getResource("./orange.png")).getImage();
 
         loadMap();
+
+        gameLoop=new Timer(50,this);
+        gameLoop.start();
        }
 
        public void loadMap() {
@@ -157,5 +164,23 @@ public class MazeMania extends JPanel {
               for(Block food:foods) {
                      g.drawImage(food.image,food.x,food.y,food.width,food.height,null);
               }
+       }
+
+       @Override
+       public void actionPerformed(ActionEvent e) {
+              repaint();
+       }
+
+       @Override
+       public void keyTyped(KeyEvent e) {
+       }
+
+       @Override
+       public void keyPressed(KeyEvent e) {
+      }
+
+       @Override
+       public void keyReleased(KeyEvent e) {
+          
        }
 }

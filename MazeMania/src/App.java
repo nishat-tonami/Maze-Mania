@@ -16,9 +16,10 @@ public class App {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        MazeMania maze = new MazeMania();
+        MazeMania maze=new MazeMania();
         frame.add(maze);
         frame.pack();
+        maze.requestFocus();
         frame.setVisible(true);
     }
 }
