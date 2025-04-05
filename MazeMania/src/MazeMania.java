@@ -28,8 +28,19 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      this.startY=y;
               }
               void updateDirection(char d) {
+                     char prevD=this.d;
                      this.d=d;
                      updateVel();
+                     this.x+=this.velX;
+                     this.y+=this.velY;
+                     for(Block wall:walls) {
+                            if(collision(this,wall)) {
+                                   this.x-=this.velX;
+                                   this.y-=this.velY;
+                                   this.d=prevD;
+                                   updateVel();
+                            }
+                     }
               }
               void updateVel() {
                      if(this.d=='U') {
@@ -238,5 +249,17 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
           pacman.updateDirection('R');
        }
+       if(pacman.d=='U') {
+          pacman.image=pacmanUp;
+       } 
+       else if(pacman.d=='D') {
+         pacman.image=pacmanDown;
+       } 
+       else if(pacman.d=='L') {
+          pacman.image=pacmanLeft;
+       } 
+       else if(pacman.d=='R') {
+          pacman.image=pacmanRight;
        }
+ }
 }
