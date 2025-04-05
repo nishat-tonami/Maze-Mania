@@ -195,7 +195,20 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        public void move() {
               pacman.x+=pacman.velX;
               pacman.y+=pacman.velY;
+
+              for(Block wall:walls) {
+                     if(collision(pacman,wall)) {
+                            pacman.x-=pacman.velX;
+                            pacman.y-=pacman.velY;
+                            break;
+                     }
+              }
        }      
+       
+       public boolean collision(Block a,Block b) {
+              return a.x<b.x+b.width && a.x+a.width>b.x 
+              && a.y<b.y+b.height && a.y+a.height>b.y;
+       }
 
        @Override
        public void actionPerformed(ActionEvent e) {
