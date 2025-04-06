@@ -115,6 +115,8 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        Block pacman;
 
        Timer gameLoop;
+       char[] direction={'U','D','L','R'};
+       Random rando=new Random();
 
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -137,7 +139,10 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
         foodImage=new ImageIcon(getClass().getResource("./orange.png")).getImage();
 
         loadMap();
-
+        for(Block ghost:ghosts) {
+              char newD=direction[rando.nextInt(4)];
+              ghost.updateDirection(newD);
+        }
         gameLoop=new Timer(50,this);
         gameLoop.start();
        }
@@ -214,6 +219,20 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                             break;
                      }
               }
+
+              for(Block ghost:ghosts) {
+                     ghost.x+=ghost.velX;
+                     ghost.y+=ghost.velY;
+
+                     for(Block wall:walls) {
+                            if(collision(ghost,wall)) {
+                                   ghost.x-=ghost.velX;
+                                   ghost.y-=ghost.velY;
+                                   char newD=direction[rando.nextInt(4)];
+                                   ghost.updateDirection(newD);
+                            }
+                     }
+              }
        }      
        
        public boolean collision(Block a,Block b) {
@@ -248,7 +267,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        }
        else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
           pacman.updateDirection('R');
-       }
+       }                                          
        if(pacman.d=='U') {
           pacman.image=pacmanUp;
        } 
