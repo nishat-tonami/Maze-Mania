@@ -225,7 +225,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      ghost.y+=ghost.velY;
 
                      for(Block wall:walls) {
-                            if(collision(ghost,wall)) {
+                            if(collision(ghost,wall) || ghost.x<=0 || ghost.x+ghost.width>=boardWidth) {
                                    ghost.x-=ghost.velX;
                                    ghost.y-=ghost.velY;
                                    char newD=direction[rando.nextInt(4)];
