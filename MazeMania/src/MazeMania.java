@@ -61,6 +61,10 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      }
 
               }
+              void reset() {
+                     this.x=this.startX;
+                     this.y=this.startY;
+              }
        }
 
        private int rowCnt=21;
@@ -229,6 +233,10 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               }
 
               for(Block ghost:ghosts) {
+                     if(collision(ghost,pacman)) {
+                            lives--;
+                            resetPosition();
+                     }
                      if(ghost.y==tileSize*9 && ghost.d!='U' && ghost.d!='D') {
                             ghost.updateDirection('U');
                      }
@@ -257,6 +265,17 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        public boolean collision(Block a,Block b) {
               return a.x<b.x+b.width && a.x+a.width>b.x 
               && a.y<b.y+b.height && a.y+a.height>b.y;
+       }
+       
+       public void resetPosition() {
+              pacman.reset();
+              pacman.velX=0;
+              pacman.velY=0;
+              for(Block ghost:ghosts) {
+                     ghost.reset();
+                     char newD=direction[rando.nextInt(4)];
+                     ghost.updateDirection(newD);
+              }
        }
 
        @Override
