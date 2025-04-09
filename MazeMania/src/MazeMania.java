@@ -221,6 +221,9 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               }
 
               for(Block ghost:ghosts) {
+                     if(ghost.y==tileSize*9 && ghost.d!='U' && ghost.d!='D') {
+                            ghost.updateDirection('U');
+                     }
                      ghost.x+=ghost.velX;
                      ghost.y+=ghost.velY;
 
