@@ -264,6 +264,10 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                   }
               }
               foods.remove(foodEaten);
+
+              if(foods.isEmpty()) {
+                     resetPosition();
+              }
        }      
        
        public boolean collision(Block a,Block b) {
