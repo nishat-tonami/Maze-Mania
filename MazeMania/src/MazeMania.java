@@ -235,6 +235,10 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               for(Block ghost:ghosts) {
                      if(collision(ghost,pacman)) {
                             lives--;
+                            if(lives==0) {
+                               gameOver=true;
+                               return;
+                            }
                             resetPosition();
                      }
                      if(ghost.y==tileSize*9 && ghost.d!='U' && ghost.d!='D') {
@@ -282,6 +286,9 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        public void actionPerformed(ActionEvent e) {
               move();
               repaint();
+              if(gameOver) {
+                     gameLoop.stop();
+              }
        }
 
        @Override
