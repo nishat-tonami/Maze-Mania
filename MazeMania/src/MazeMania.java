@@ -301,6 +301,16 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        @Override
        public void keyReleased(KeyEvent e) {
+
+       if(gameOver) {
+              loadMap();
+              resetPosition();
+              lives=3;
+              score=0;
+              gameOver=false;
+              gameLoop.start();
+       }
+
        if(e.getKeyCode()==KeyEvent.VK_UP) {
           pacman.updateDirection('U');
        }
