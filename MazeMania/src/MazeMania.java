@@ -117,6 +117,8 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        Timer gameLoop;
        char[] direction={'U','D','L','R'};
        Random rando=new Random();
+       int score=0,lives=3;
+       boolean gameOver=false;
 
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -206,6 +208,12 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               for(Block food:foods) {
                      g.drawImage(food.image,food.x,food.y,food.width,food.height,null);
               }
+              g.setFont(new Font("Arial",Font.PLAIN,18));
+              if(gameOver) {
+                     g.drawString("Game Over! Score : "+String.valueOf(score),tileSize/2,tileSize/2);
+              } else{
+                     g.drawString("x"+String.valueOf(lives)+" Score : "+String.valueOf(score),tileSize/2,tileSize/2);
+              }
        }
 
        public void move() {
@@ -236,6 +244,14 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                             }
                      }
               }
+              Block foodEaten=null;
+              for(Block food:foods) {
+                     if(collision(pacman,food)) {
+                     foodEaten=food;
+                     score+=5;
+                  }
+              }
+              foods.remove(foodEaten);
        }      
        
        public boolean collision(Block a,Block b) {
