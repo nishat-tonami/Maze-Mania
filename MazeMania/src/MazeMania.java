@@ -224,6 +224,19 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               pacman.x+=pacman.velX;
               pacman.y+=pacman.velY;
 
+              if(pacman.x<0) {
+                     pacman.x=boardWidth-pacman.width;
+              } else if(pacman.x+pacman.width>boardWidth) {
+                     pacman.x=0;
+              } 
+
+              if(pacman.y<0) {
+                     pacman.y=boardHeight-pacman.height;
+              } else if(pacman.y+pacman.height>boardHeight) {
+                     pacman.y=0;
+              } 
+
+
               for(Block wall:walls) {
                      if(collision(pacman,wall)) {
                             pacman.x-=pacman.velX;
