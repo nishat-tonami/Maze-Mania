@@ -87,31 +87,32 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        private Image foodImage;
 
-     //X=wall,O=skip,P=pacman,' '=food
-    //Ghosts:c=cyan,o=orange,p=pink,r=red
-    private String[] tileMap = {
-       "XXXXXXXXXXXXXXXXXXX",
-       "X        X        X",
-       "X XX XXX X XXX XX X",
-       "X                 X",
-       "X XX X XXXXX X XX X",
-       "X    X       X    X",
-       "XXXX XXXX XXXX XXXX",
-       "OOOX X       X XOOO",
-       "XXXX X XXrXX X XXXX",
-       "O       cpo       O",
-       "XXXX X XXXXX X XXXX",
-       "OOOX X       X XOOO",
-       "XXXX X XXXXX X XXXX",
-       "X        X        X",
-       "X XX XXX X XXX XX X",
-       "X  X     P     X  X",
-       "XX X X XXXXX X X XX",
-       "X    X   X   X    X",
-       "X XXXXXX X XXXXXX X",
-       "X                 X",
-       "XXXXXXXXXXXXXXXXXXX" 
-   };
+       // here 0=empty space/food(cause in the epmty space there would be food)
+       //1=wall,2=pacman,3=cyan ghost,4=red ghost,5=orange ghost,6=pink ghost
+
+       private int[][] tileMap=new int[][] {
+       {1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1},
+       {1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+       {1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1},
+       {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+       {1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1},
+       {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
+       {1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1},
+       {0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0},
+       {1,1,1,1,0,1,0,1,1,4,1,1,0,1,0,1,1,1,1},
+       {0,0,0,0,0,0,0,0,6,5,3,0,0,0,0,0,0,0,0},
+       {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1},
+       {0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0},
+       {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1},
+       {1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
+       {1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1},
+       {1,0,0,1,0,0,0,0,0,2,0,0,0,0,1,0,0,0,1},
+       {1,1,0,1,0,1,1,1,1,0,1,0,1,1,1,0,1,1,1},
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+       {1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1},
+       {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+       {1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1}
+};
 
        HashSet<Block> walls;
        HashSet<Block> foods;
@@ -154,48 +155,28 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        }
 
        public void loadMap() {
-              walls=new HashSet<Block>();
-              foods=new HashSet<Block>();
-              ghosts=new HashSet<Block>();
-
+              walls=new HashSet<>();
+              foods=new HashSet<>();
+              ghosts=new HashSet<>();
+              
               for(int i=0;i<rowCnt;i++) {
                      for(int j=0;j<columnCnt;j++) {
-                            String row=tileMap[i];
-                            char tileMapChar=row.charAt(j);
-
+                            int tile=tileMap[i][j];
                             int x=j*tileSize;
                             int y=i*tileSize;
 
-                            if(tileMapChar=='X') {
-                                   Block wall=new Block(wallImage,x,y,tileSize,tileSize);
-                                   walls.add(wall);
-                            }
-                            else if(tileMapChar=='c') {
-                                   Block ghost=new Block(cyanGhost,x,y,tileSize,tileSize);
-                                   ghosts.add(ghost);
-                            }
-                            else if(tileMapChar=='p') {
-                                   Block ghost=new Block(pinkGhost,x,y,tileSize,tileSize);
-                                   ghosts.add(ghost);
-                            }
-                            else if(tileMapChar=='o') {
-                                   Block ghost=new Block(orangeGhost,x,y,tileSize,tileSize);
-                                   ghosts.add(ghost);
-                            }
-                            else if(tileMapChar=='r') {
-                                   Block ghost=new Block(redGhost,x,y,tileSize,tileSize);
-                                   ghosts.add(ghost);
-                            }
-                            else if(tileMapChar=='P') {
-                                   pacman=new Block(pacmanRight,x,y,tileSize,tileSize);
-                            }
-                            else if(tileMapChar==' ') {
-                                   Block food=new Block(foodImage,x+8,y+8,16,16);
-                                   foods.add(food);
-                            }
+                            if(tile==1) walls.add(new Block(wallImage,x,y,tileSize,tileSize));
+                            else if(tile==0) foods.add(new Block(foodImage,x+8,y+8,16,16));
+                            else if(tile==2) pacman=new Block(pacmanRight,x,y,tileSize,tileSize);
+                            else if(tile==3) ghosts.add(new Block(cyanGhost,x,y,tileSize,tileSize));
+                            else if(tile==4) ghosts.add(new Block(redGhost,x,y,tileSize,tileSize));
+                            else if(tile==5) ghosts.add(new Block(orangeGhost,x,y,tileSize,tileSize));
+                            else if(tile==6) ghosts.add(new Block(pinkGhost,x,y,tileSize,tileSize));
                      }
-              }
-       }
+
+              }    
+    }
+
        public void paintComponent(Graphics g) {
               super.paintComponent(g);
               draw(g);
