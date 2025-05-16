@@ -127,11 +127,16 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        boolean gameOver=false;
        char nextDirection=' ';
 
+       private boolean showHomeScreen=true;
+       private Image homeScreenImage;
+
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
         setBackground(Color.darkGray);
         addKeyListener(this);
         setFocusable(true);
+        
+       homeScreenImage=new ImageIcon(getClass().getResource("./homescreen.jpeg")).getImage();
 
         wallImage=new ImageIcon(getClass().getResource("./wall.png")).getImage();
         cyanGhost=new ImageIcon(getClass().getResource("./cyan ghost.png")).getImage();
@@ -153,7 +158,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               ghost.updateDirection(newD);
         }
         gameLoop=new Timer(50,this);
-        gameLoop.start();
+        //gameLoop.start();
        }
 
        public void loadMap() {
@@ -181,8 +186,22 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        public void paintComponent(Graphics g) {
               super.paintComponent(g);
-              draw(g);
+              if(showHomeScreen) drawHomeScreen(g);
+              else draw(g);
        }
+
+       private void drawHomeScreen(Graphics g) {
+            int imgW=homeScreenImage.getWidth(null);
+            int imgH=homeScreenImage.getHeight(null);
+            g.drawImage(homeScreenImage,(boardWidth-imgW)/2,(boardHeight-imgH)/3,null);
+
+            g.setColor(Color.YELLOW);
+            g.setFont(new Font("Arial",Font.BOLD,34));
+            String msg ="Press 'S' to Start!!"; 
+            int strWidth=g.getFontMetrics().stringWidth(msg);
+            g.drawString(msg,(boardWidth-strWidth)/2,boardHeight-100);
+       }
+
        public void draw(Graphics g) {
              g.drawImage(pacman.image,pacman.x,pacman.y,pacman.width,pacman.height,null);
 
@@ -324,6 +343,12 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        @Override
        public void keyPressed(KeyEvent e) {
+              if(showHomeScreen && e.getKeyCode()==KeyEvent.VK_S) {
+              showHomeScreen=false;
+              gameLoop.start();
+              return;
+          }
+
               if(gameOver) return;
              
               if(e.getKeyCode()==KeyEvent.VK_UP) nextDirection='U';
