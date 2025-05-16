@@ -45,18 +45,18 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               void updateVel() {
                      if(this.d=='U') {
                             this.velX=0;
-                            this.velY=-tileSize/4;
+                            this.velY=-speed;
                      }
                      else if(this.d=='D') {
                             this.velX=0;
-                            this.velY=tileSize/4;
+                            this.velY=speed;
                      }
                      else if(this.d=='L') {
-                            this.velX=-tileSize/4;
+                            this.velX=-speed;
                             this.velY=0;
                      }
                      else if(this.d=='R') {
-                            this.velX=tileSize/4;
+                            this.velX=speed;
                             this.velY=0;
                      }
 
@@ -69,7 +69,8 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        private int rowCnt=21;
        private int columnCnt=19;
-       private int tileSize=32;
+       private int tileSize=36;
+       private int speed=tileSize/6;
        private int boardHeight=rowCnt*tileSize;
        private int boardWidth=columnCnt*tileSize;
 
@@ -98,7 +99,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        {1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1},
        {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
        {1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1},
-       {0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0},
+       {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
        {1,1,1,1,0,1,0,1,1,4,1,1,0,1,0,1,1,1,1},
        {0,0,0,0,0,0,0,0,6,5,3,0,0,0,0,0,0,0,0},
        {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1},
@@ -124,6 +125,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        Random rando=new Random();
        int score=0,lives=3;
        boolean gameOver=false;
+       char nextDirection=' ';
 
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -202,6 +204,9 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        }
 
        public void move() {
+              if(canMove(pacman,nextDirection)) {
+                 pacman.updateDirection(nextDirection);
+              }
               pacman.x+=pacman.velX;
               pacman.y+=pacman.velY;
 
@@ -217,7 +222,11 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      pacman.y=0;
               } 
 
-
+              if(pacman.d=='U') pacman.image=pacmanUp;
+              else if(pacman.d=='D') pacman.image=pacmanDown;
+              else if(pacman.d=='L') pacman.image=pacmanLeft;
+              else if(pacman.d=='R') pacman.image=pacmanRight;
+ 
               for(Block wall:walls) {
                      if(collision(pacman,wall)) {
                             pacman.x-=pacman.velX;
@@ -268,6 +277,26 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               return a.x<b.x+b.width && a.x+a.width>b.x 
               && a.y<b.y+b.height && a.y+a.height>b.y;
        }
+
+       public boolean canMove(Block a,char d) {
+              int tempX=a.x;
+              int tempY=a.y;
+              int speed=this.speed;
+              
+              if(d=='U') tempY-=speed;
+              else if(d=='D') tempY+=speed;
+              else if(d=='L') tempX-=speed;
+              else if(d=='R') tempX+=speed;
+
+              Block temp=new Block(null,tempX,tempY,a.width,a.height);
+
+              for(Block wall:walls) {
+                     if(collision(temp,wall)) {
+                            return false;
+                     }
+              }
+              return true;
+       }
        
        public void resetPosition() {
               pacman.reset();
@@ -295,6 +324,12 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
        @Override
        public void keyPressed(KeyEvent e) {
+              if(gameOver) return;
+             
+              if(e.getKeyCode()==KeyEvent.VK_UP) nextDirection='U';
+              else if(e.getKeyCode()==KeyEvent.VK_DOWN) nextDirection='D';
+              else if(e.getKeyCode()==KeyEvent.VK_LEFT) nextDirection='L';
+              else if (e.getKeyCode()==KeyEvent.VK_RIGHT) nextDirection='R';
       }
 
        @Override
@@ -307,31 +342,6 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               score=0;
               gameOver=false;
               gameLoop.start();
-       }
-
-       if(e.getKeyCode()==KeyEvent.VK_UP) {
-          pacman.updateDirection('U');
-       }
-       else if(e.getKeyCode()==KeyEvent.VK_DOWN) {
-          pacman.updateDirection('D');
-       }
-       else if(e.getKeyCode()==KeyEvent.VK_LEFT) {
-          pacman.updateDirection('L');
-       }
-       else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
-          pacman.updateDirection('R');
-       }                                          
-       if(pacman.d=='U') {
-          pacman.image=pacmanUp;
-       } 
-       else if(pacman.d=='D') {
-         pacman.image=pacmanDown;
-       } 
-       else if(pacman.d=='L') {
-          pacman.image=pacmanLeft;
-       } 
-       else if(pacman.d=='R') {
-          pacman.image=pacmanRight;
        }
  }
 }

@@ -4,7 +4,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         int rowCnt=21;
         int columnCnt=19;
-        int tileSize=32;
+        int tileSize=36;
         int boardHeight=rowCnt*tileSize;
         int boardWidth=columnCnt*tileSize;
 
