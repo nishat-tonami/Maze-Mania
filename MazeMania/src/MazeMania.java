@@ -87,6 +87,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        private Image pacmanRight;
 
        private Image foodImage;
+       private Image heartImage;
 
        // here 0=empty space/food(cause in the epmty space there would be food)
        //1=wall,2=pacman,3=cyan ghost,4=red ghost,5=orange ghost,6=pink ghost
@@ -136,7 +137,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
         addKeyListener(this);
         setFocusable(true);
         
-       homeScreenImage=new ImageIcon(getClass().getResource("./homescreen.jpeg")).getImage();
+        homeScreenImage=new ImageIcon(getClass().getResource("./homescreen.jpeg")).getImage();
 
         wallImage=new ImageIcon(getClass().getResource("./wall.png")).getImage();
         cyanGhost=new ImageIcon(getClass().getResource("./cyan ghost.png")).getImage();
@@ -151,6 +152,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
         pacmanRight=new ImageIcon(getClass().getResource("./pacman right.png")).getImage();
 
         foodImage=new ImageIcon(getClass().getResource("./orange.png")).getImage();
+        heartImage=new ImageIcon(getClass().getResource("./heart.png")).getImage();
 
         loadMap();
         for(Block ghost:ghosts) {
@@ -216,10 +218,21 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               }
               g.setFont(new Font("Arial",Font.PLAIN,18));
               if(gameOver) {
-                     g.drawString("Game Over! Score : "+String.valueOf(score),tileSize/2,tileSize/2);
+                     g.setFont(new Font("Arial",Font.BOLD,26));
+                     g.setColor(Color.RED);
+                     g.drawString("Game Over! Score : " + score,tileSize,tileSize);
               } else{
-                     g.drawString("x"+String.valueOf(lives)+" Score : "+String.valueOf(score),tileSize/2,tileSize/2);
+                     int heartX=tileSize/2;
+                     int heartY=tileSize/4;
+                     for(int i=0;i<lives;i++) {
+                     g.drawImage(heartImage,heartX+i*(tileSize+4),heartY,tileSize,tileSize,null);
               }
+              g.setFont(new Font("Arial",Font.BOLD,26));
+              g.setColor(Color.BLACK);
+              g.drawString("Score: " + score,boardWidth-200+2,tileSize);
+              g.setColor(Color.YELLOW);
+              g.drawString("Score: "+score,boardWidth-200,tileSize);
+          }
        }
 
        public void move() {
