@@ -89,8 +89,9 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        private Image foodImage;
        private Image heartImage;
 
-       // here 0=empty space/food(cause in the epmty space there would be food)
+       // here 0=empty space/food(cause in the empty space there would be food)
        //1=wall,2=pacman,3=cyan ghost,4=red ghost,5=orange ghost,6=pink ghost
+       //7=empty space(no food,inside wall)
 
        private int[][] tileMap=new int[][] {
        {1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1},
@@ -100,11 +101,11 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        {1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1},
        {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
        {1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1},
-       {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+       {7,7,7,1,0,0,0,0,0,0,0,0,0,0,0,1,7,7,7},
        {1,1,1,1,0,1,0,1,1,4,1,1,0,1,0,1,1,1,1},
        {0,0,0,0,0,0,0,0,6,5,3,0,0,0,0,0,0,0,0},
        {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1},
-       {0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0},
+       {7,7,7,1,0,0,0,0,0,1,0,0,0,0,0,1,7,7,7},
        {1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1},
        {1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
        {1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1},
@@ -137,7 +138,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
         addKeyListener(this);
         setFocusable(true);
         
-        homeScreenImage=new ImageIcon(getClass().getResource("./homescreen.jpeg")).getImage();
+        homeScreenImage=new ImageIcon(getClass().getResource("./background.png")).getImage();
 
         wallImage=new ImageIcon(getClass().getResource("./wall.png")).getImage();
         cyanGhost=new ImageIcon(getClass().getResource("./cyan ghost.png")).getImage();
