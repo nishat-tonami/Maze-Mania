@@ -89,6 +89,12 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        private Image foodImage;
        private Image heartImage;
 
+       private boolean showHomeScreen=true;
+       private Image homeScreenImage;
+
+       private boolean showEndScreen=false;
+       private Image endScreenImage;
+
        // here 0=empty space/food(cause in the empty space there would be food)
        //1=wall,2=pacman,3=cyan ghost,4=red ghost,5=orange ghost,6=pink ghost
        //7=empty space(no food,inside wall)
@@ -129,8 +135,6 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        boolean gameOver=false;
        char nextDirection=' ';
 
-       private boolean showHomeScreen=true;
-       private Image homeScreenImage;
 
        MazeMania() {
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -139,6 +143,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
         setFocusable(true);
         
         homeScreenImage=new ImageIcon(getClass().getResource("./background.png")).getImage();
+        endScreenImage=new ImageIcon(getClass().getResource("./gameover.jpeg")).getImage();
 
         wallImage=new ImageIcon(getClass().getResource("./wall.png")).getImage();
         cyanGhost=new ImageIcon(getClass().getResource("./cyan ghost.png")).getImage();
@@ -190,6 +195,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
        public void paintComponent(Graphics g) {
               super.paintComponent(g);
               if(showHomeScreen) drawHomeScreen(g);
+              else if(showEndScreen) drawEndScreen(g);
               else draw(g);
        }
 
@@ -200,9 +206,27 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
 
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Arial",Font.BOLD,34));
-            String msg ="Press 'S' to Start!!"; 
-            int strWidth=g.getFontMetrics().stringWidth(msg);
-            g.drawString(msg,(boardWidth-strWidth)/2,boardHeight-100);
+            String msg="Press 'S' to Start!!"; 
+            int msgWidth=g.getFontMetrics().stringWidth(msg);
+            g.drawString(msg,(boardWidth-msgWidth)/2,boardHeight-100);
+       }
+
+       private void drawEndScreen(Graphics g) {
+              int imgW=endScreenImage.getWidth(null);
+              int imgH=endScreenImage.getHeight(null);
+              g.drawImage(endScreenImage,(boardWidth-imgW)/2,(boardHeight-imgH)/3,null);
+
+              g.setColor(Color.RED);
+              g.setFont(new Font("Arial",Font.BOLD,44));
+              String msg="Game Over ! Score: "+score;
+              int msgWidth=g.getFontMetrics().stringWidth(msg);
+              g.drawString(msg,(boardWidth-msgWidth)/2,boardHeight/2-20);
+
+              g.setColor(Color.YELLOW);
+              g.setFont(new Font("Arial",Font.BOLD,36));
+              String str="Press 'SPACEBAR' to play again!!";
+              int strtWidth= g.getFontMetrics().stringWidth(str);
+              g.drawString(str,(boardWidth-strtWidth)/2,boardHeight/2+40);
        }
 
        public void draw(Graphics g) {
@@ -222,7 +246,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                      g.setFont(new Font("Arial",Font.BOLD,26));
                      g.setColor(Color.RED);
                      g.drawString("Game Over! Score : " + score,tileSize,tileSize);
-              } else{
+              } else {
                      int heartX=tileSize/2;
                      int heartY=tileSize/4;
                      for(int i=0;i<lives;i++) {
@@ -276,6 +300,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
                                return;
                             }
                             resetPosition();
+                            nextDirection=' ';
                      }
                      if(ghost.y==tileSize*9 && ghost.d!='U' && ghost.d!='D') {
                             ghost.updateDirection('U');
@@ -335,6 +360,8 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               pacman.reset();
               pacman.velX=0;
               pacman.velY=0;
+              nextDirection=' ';
+              
               for(Block ghost:ghosts) {
                      ghost.reset();
                      char newD=direction[rando.nextInt(4)];
@@ -348,6 +375,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               repaint();
               if(gameOver) {
                      gameLoop.stop();
+                     showEndScreen=true;
               }
        }
 
@@ -363,13 +391,26 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               return;
           }
 
-              if(gameOver) return;
+              if(showEndScreen && e.getKeyCode()==KeyEvent.VK_SPACE) {
+                     showEndScreen=false;
+                     loadMap();
+                     resetPosition();
+                     lives=3;
+                     score=0;
+                     gameOver=false;
+                     nextDirection=' ';
+                     gameLoop.start();
+                     return;
+          }
+
+              if(gameOver || showEndScreen) return;
              
               if(e.getKeyCode()==KeyEvent.VK_UP) nextDirection='U';
               else if(e.getKeyCode()==KeyEvent.VK_DOWN) nextDirection='D';
               else if(e.getKeyCode()==KeyEvent.VK_LEFT) nextDirection='L';
               else if (e.getKeyCode()==KeyEvent.VK_RIGHT) nextDirection='R';
-      }
+
+         }
 
        @Override
        public void keyReleased(KeyEvent e) {
@@ -380,6 +421,7 @@ public class MazeMania extends JPanel implements ActionListener,KeyListener{
               lives=3;
               score=0;
               gameOver=false;
+              nextDirection=' ';
               gameLoop.start();
        }
  }
